@@ -72,8 +72,8 @@
 #include "util/ralloc.h"
 
 struct exec_node {
-   struct exec_node *next;
-   struct exec_node *prev;
+   struct exec_node *next = NULL;
+   struct exec_node *prev = NULL;
 
 #ifdef __cplusplus
    DECLARE_RALLOC_CXX_OPERATORS(exec_node)
@@ -305,9 +305,9 @@ struct exec_node;
 #endif
 
 struct exec_list {
-   struct exec_node *head;
-   struct exec_node *tail;
-   struct exec_node *tail_pred;
+   struct exec_node *head = NULL;
+   struct exec_node *tail = NULL;
+   struct exec_node *tail_pred = NULL;
 
 #ifdef __cplusplus
    DECLARE_RALLOC_CXX_OPERATORS(exec_list)

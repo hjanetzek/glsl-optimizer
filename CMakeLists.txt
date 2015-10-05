@@ -17,6 +17,8 @@ else()
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
 endif()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-extra-semi -Wno-overloaded-virtual")
+
 file(GLOB glcpp-library_sources src/glsl/glcpp/*.c src/util/*.c)
 #file(GLOB glcpp-library_sources_remove src/glsl/glcpp/glcpp.c)
 #list(REMOVE_ITEM glcpp-library_sources ${glcpp-library_sources_remove})
@@ -30,6 +32,12 @@ file(GLOB glsl_sources_remove src/glsl/main.cpp src/glsl/builtin_stubs.cpp)
 list(REMOVE_ITEM glsl_sources ${glsl_sources_remove})
 add_library(glsl_optimizer ${glsl_sources})
 target_link_libraries(glsl_optimizer glcpp-library mesa)
+target_include_directories(glsl_optimizer
+  PUBLIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/glsl"
+)
+
+if (BUILD_GLSL_PROGS)
 
 add_executable(glsl_compiler src/glsl/main.cpp)
 target_link_libraries(glsl_compiler glsl_optimizer)
@@ -49,3 +57,11 @@ target_link_libraries(glslopt glsl_optimizer)
 
 #add_executable(glcpp src/glsl/glcpp/glcpp.c)
 #target_link_libraries(glcpp glsl_optimizer)
+endif ()
+
+### http://www.cmake.org/Wiki/CMake/Tutorials/Exporting_and_Importing_Targets
+export(TARGETS glsl_optimizer
+  glcpp-library
+  mesa
+  FILE glsl_optimizer-exports.cmake
+)
